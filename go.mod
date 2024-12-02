@@ -1,4 +1,4 @@
-module github.com/kevinoliver/zapsentry
+module github.com/kevinoliverf/zapsentry
 
 go 1.17
 

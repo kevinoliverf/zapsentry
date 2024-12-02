@@ -24,7 +24,7 @@ func Test_core_filterFrames(t *testing.T) {
 			args: args{
 				[]sentry.Frame{
 					{
-						Module: "github.com/kevinoliver/zapsentry",
+						Module: "github.com/kevinoliverf/zapsentry",
 					},
 				},
 			},
@@ -36,10 +36,10 @@ func Test_core_filterFrames(t *testing.T) {
 			args: args{
 				[]sentry.Frame{
 					{
-						Module: "github.com/kevinoliver/zapsentry",
+						Module: "github.com/kevinoliverf/zapsentry",
 					},
 					{
-						Module: "github.com/kevinoliver/zapsentry/someinternal",
+						Module: "github.com/kevinoliverf/zapsentry/someinternal",
 					},
 				},
 			},

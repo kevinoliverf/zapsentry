@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zaptest/observer"
 
-	"github.com/kevinoliver/zapsentry"
+	"github.com/kevinoliverf/zapsentry"
 )
 
 func TestLevelEnabler(t *testing.T) {
