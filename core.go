@@ -14,7 +14,7 @@ const (
 	defaultMaxBreadcrumbs = 100
 	maxErrorDepth         = 10
 
-	zapSentryScopeKey = "_zapsentry_scope_"
+	ZapSentryScopeKey = "_zapsentry_scope_"
 )
 
 var (
@@ -28,7 +28,7 @@ type ClientGetter interface {
 func NewScopeFromScope(scope *sentry.Scope) zapcore.Field {
 	f := zap.Skip()
 	f.Interface = scope
-	f.Key = zapSentryScopeKey
+	f.Key = ZapSentryScopeKey
 
 	return f
 }
@@ -106,7 +106,7 @@ func (c *core) Write(ent zapcore.Entry, fs []zapcore.Field) error {
 			Timestamp: ent.Time,
 		}
 
-		c.scope().AddBreadcrumb(&breadcrumb, c.cfg.MaxBreadcrumbs)
+		c.scope(fs).AddBreadcrumb(&breadcrumb, c.cfg.MaxBreadcrumbs)
 	}
 
 	if c.cfg.Level.Enabled(ent.Level) {
@@ -150,7 +150,7 @@ func (c *core) Write(ent zapcore.Entry, fs []zapcore.Field) error {
 			}
 		}
 
-		_ = c.client.CaptureEvent(event, hint, c.scope())
+		_ = c.client.CaptureEvent(event, hint, c.scope(fs))
 	}
 
 	// We may be crashing the program, so should flush any buffered events.
@@ -258,7 +258,12 @@ func (c *core) hub() *sentry.Hub {
 	return sentry.CurrentHub()
 }
 
-func (c *core) scope() *sentry.Scope {
+func (c *core) scope(fs []zapcore.Field) *sentry.Scope {
+	for _, f := range fs {
+		if scope := getScope(f); scope != nil {
+			return scope
+		}
+	}
 	if c.sentryScope != nil {
 		return c.sentryScope
 	}
@@ -268,7 +273,7 @@ func (c *core) scope() *sentry.Scope {
 
 func getScope(field zapcore.Field) *sentry.Scope {
 	if field.Type == zapcore.SkipType {
-		if scope, ok := field.Interface.(*sentry.Scope); ok && field.Key == zapSentryScopeKey {
+		if scope, ok := field.Interface.(*sentry.Scope); ok && field.Key == ZapSentryScopeKey {
 			return scope
 		}
 	}

@@ -2,7 +2,7 @@
 
 ## Installation
 ```
-go get github.com/TheZeroSlave/zapsentry
+go get github.com/kevinoliver/zapsentry
 ```
 
 ## Integration using Sentry Client
